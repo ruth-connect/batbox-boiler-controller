@@ -25,13 +25,13 @@ public class BoilerServiceImpl implements BoilerService {
 	public void initialise() {
 		gpio = GpioFactory.getInstance();
 		
-		powerLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "Power LED", PinState.HIGH);
+		powerLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Power LED", PinState.HIGH);
 		powerLed.setShutdownOptions(true, PinState.LOW);
 		
-		hotWater = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_09, "Hot Water", PinState.LOW);
+		hotWater = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "Hot Water", PinState.LOW);
 		hotWater.setShutdownOptions(true, PinState.LOW);
 		
-		heating = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, "Heating", PinState.LOW);
+		heating = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "Heating", PinState.LOW);
 		heating.setShutdownOptions(true, PinState.LOW);
 	}
 	
