@@ -35,4 +35,16 @@ public class BoilerController {
 	public void heatingAndHotWater() throws IOException {
 		boilerService.heatingAndHotWater();
 	}
+	
+	@RequestMapping(value = "/upLedOff", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public void upLedOff() throws IOException {
+		boilerService.upLedOff();
+	}
+	
+	@RequestMapping(value = "/upLedOn", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public void upLedOn() throws IOException {
+		boilerService.upLedOn();
+	}
 }

@@ -17,7 +17,7 @@ import uk.me.ruthmills.batbox.boiler.service.BoilerService;
 public class BoilerServiceImpl implements BoilerService {
 	
 	private GpioController gpio;
-	private GpioPinDigitalOutput powerLed;
+	private GpioPinDigitalOutput upLed;
 	private GpioPinDigitalOutput hotWater;
 	private GpioPinDigitalOutput heating;
 	
@@ -25,8 +25,8 @@ public class BoilerServiceImpl implements BoilerService {
 	public void initialise() {
 		gpio = GpioFactory.getInstance();
 		
-		powerLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "Power LED", PinState.HIGH);
-		powerLed.setShutdownOptions(true, PinState.LOW);
+		upLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "Up LED", PinState.HIGH);
+		upLed.setShutdownOptions(true, PinState.LOW);
 		
 		hotWater = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_09, "Hot Water", PinState.LOW);
 		hotWater.setShutdownOptions(true, PinState.LOW);
@@ -56,5 +56,15 @@ public class BoilerServiceImpl implements BoilerService {
 	public void heatingAndHotWater() {
 		hotWater.high();
 		heating.high();
+	}
+	
+	@Override()
+	public void upLedOff() {
+		upLed.low();
+	}
+
+	@Override
+	public void upLedOn() {
+		upLed.high();
 	}
 }
