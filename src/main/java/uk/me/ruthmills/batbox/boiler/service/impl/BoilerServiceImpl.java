@@ -57,14 +57,4 @@ public class BoilerServiceImpl implements BoilerService {
 		hotWater.low();
 		heating.low();
 	}
-	
-	@Override()
-	public void upLedOff() {
-		upLed.high();
-	}
-
-	@Override
-	public void upLedOn() {
-		upLed.low();
-	}
 }
