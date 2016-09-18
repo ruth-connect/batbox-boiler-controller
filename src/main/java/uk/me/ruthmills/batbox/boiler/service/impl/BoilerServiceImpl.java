@@ -25,14 +25,14 @@ public class BoilerServiceImpl implements BoilerService {
 	public void initialise() {
 		gpio = GpioFactory.getInstance();
 		
-		upLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "Up LED", PinState.HIGH);
-		upLed.setShutdownOptions(true, PinState.LOW);
+		upLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "Up LED", PinState.LOW);
+		upLed.setShutdownOptions(true, PinState.HIGH);
 		
-		hotWater = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_09, "Hot Water", PinState.LOW);
-		hotWater.setShutdownOptions(true, PinState.LOW);
+		hotWater = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_09, "Hot Water", PinState.HIGH);
+		hotWater.setShutdownOptions(true, PinState.HIGH);
 		
-		heating = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, "Heating", PinState.LOW);
-		heating.setShutdownOptions(true, PinState.LOW);
+		heating = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, "Heating", PinState.HIGH);
+		heating.setShutdownOptions(true, PinState.HIGH);
 	}
 	
 	@PreDestroy
@@ -42,29 +42,29 @@ public class BoilerServiceImpl implements BoilerService {
 
 	@Override
 	public void off() {
-		hotWater.low();
-		heating.low();
-	}
-	
-	@Override
-	public void hotWaterOnly() {
-		hotWater.high();
-		heating.low();
-	}
-	
-	@Override
-	public void heatingAndHotWater() {
 		hotWater.high();
 		heating.high();
 	}
 	
+	@Override
+	public void hotWaterOnly() {
+		hotWater.low();
+		heating.high();
+	}
+	
+	@Override
+	public void heatingAndHotWater() {
+		hotWater.low();
+		heating.low();
+	}
+	
 	@Override()
 	public void upLedOff() {
-		upLed.low();
+		upLed.high();
 	}
 
 	@Override
 	public void upLedOn() {
-		upLed.high();
+		upLed.low();
 	}
 }
