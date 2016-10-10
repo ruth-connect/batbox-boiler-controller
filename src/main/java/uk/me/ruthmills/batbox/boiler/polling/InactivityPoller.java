@@ -14,6 +14,7 @@ public class InactivityPoller {
 
 	@Scheduled(cron = "*/1 * * * * *")
 	public void checkInactivity() {
+		System.out.println("CHECK INACTIVITY");
 		boilerService.checkInactivity();
 	}
 }
