@@ -18,6 +18,8 @@ import uk.me.ruthmills.batbox.boiler.service.BoilerService;
 @Service
 public class BoilerServiceImpl implements BoilerService {
 	
+	private static final long MAXIMUM_WAIT_SINCE_LAST_COMMAND_WAS_RECEIVED = 315000L;
+	
 	private GpioController gpio;
 	private GpioPinDigitalOutput upLed;
 	private GpioPinDigitalOutput hotWater;
@@ -70,31 +72,50 @@ public class BoilerServiceImpl implements BoilerService {
 
 	@Override
 	public void updateStatus() {
-		if (new Date().getTime() - lastCommandReceivedTime > 315000L) {
-			upLed.high();
-			hotWater.high();
-			heating.high();
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException ex) {
-			}
+		if (tooLongHasElapsedSinceLastCommandWasReceived()) {
+			turnUpLedHeatingAndHotWaterOffAndWaitHalfASecond();
 		} else {
-			if (hotWaterOn || heatingOn) {
-				hotWater.low();
-			} else {
-				hotWater.high();
-			}
-			
-			if (heatingOn) {
-				heating.low();
-			} else {
-				heating.high();
-			}
+			updateHotWaterGpioOutput();
+			updateHeatingGpioOutput();
 		}
-		upLed.low();
+		turnUpLedOn();
 	}
 	
 	private void updateLastCommandReceivedTime() {
 		lastCommandReceivedTime = new Date().getTime();		
+	}
+	
+	private boolean tooLongHasElapsedSinceLastCommandWasReceived() {
+		return new Date().getTime() - lastCommandReceivedTime > MAXIMUM_WAIT_SINCE_LAST_COMMAND_WAS_RECEIVED;
+	}
+	
+	private void turnUpLedHeatingAndHotWaterOffAndWaitHalfASecond() {
+		upLed.high();
+		hotWater.high();
+		heating.high();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException ex) {
+		}
+	}
+	
+	private void updateHotWaterGpioOutput() {
+		if (hotWaterOn || heatingOn) {
+			hotWater.low();
+		} else {
+			hotWater.high();
+		}
+	}
+	
+	private void updateHeatingGpioOutput() {		
+		if (heatingOn) {
+			heating.low();
+		} else {
+			heating.high();
+		}		
+	}
+	
+	private void turnUpLedOn() {
+		upLed.low();
 	}
 }
