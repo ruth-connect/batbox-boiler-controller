@@ -23,6 +23,9 @@ public class BoilerServiceImpl implements BoilerService {
 	private GpioPinDigitalOutput hotWater;
 	private GpioPinDigitalOutput heating;
 	
+	private boolean hotWaterOn = false;
+	private boolean heatingOn = false;
+	
 	private long lastCommandReceivedTime = 0L;
 	
 	@PostConstruct
@@ -47,26 +50,26 @@ public class BoilerServiceImpl implements BoilerService {
 	@Override
 	public void off() {
 		updateLastCommandReceivedTime();
-		hotWater.high();
-		heating.high();
+		hotWaterOn = false;
+		heatingOn = false;
 	}
 	
 	@Override
 	public void hotWaterOnly() {
 		updateLastCommandReceivedTime();
-		hotWater.low();
-		heating.high();
+		hotWaterOn = true;
+		heatingOn = false;
 	}
 	
 	@Override
 	public void heatingAndHotWater() {
 		updateLastCommandReceivedTime();
-		hotWater.low();
-		heating.low();
+		hotWaterOn = true;
+		heatingOn = true;
 	}
 
 	@Override
-	public void checkInactivity() {
+	public void updateStatus() {
 		if (new Date().getTime() - lastCommandReceivedTime > 315000L) {
 			upLed.high();
 			hotWater.high();
@@ -74,6 +77,18 @@ public class BoilerServiceImpl implements BoilerService {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException ex) {
+			}
+		} else {
+			if (hotWaterOn || heatingOn) {
+				hotWater.low();
+			} else {
+				hotWater.high();
+			}
+			
+			if (heatingOn) {
+				heating.low();
+			} else {
+				heating.high();
 			}
 		}
 		upLed.low();

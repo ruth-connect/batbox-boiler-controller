@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import uk.me.ruthmills.batbox.boiler.service.BoilerService;
 
 @Component
-public class InactivityPoller {
+public class StatusPoller {
 	
 	@Autowired
 	private BoilerService boilerService;
 
 	@Scheduled(cron = "*/1 * * * * *")
-	public void checkInactivity() {
-		boilerService.checkInactivity();
+	public void updateStatus() {
+		boilerService.updateStatus();
 	}
 }

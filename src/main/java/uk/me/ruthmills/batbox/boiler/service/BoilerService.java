@@ -8,5 +8,5 @@ public interface BoilerService {
 	
 	public void heatingAndHotWater();
 	
-	public void checkInactivity();
+	public void updateStatus();
 }
