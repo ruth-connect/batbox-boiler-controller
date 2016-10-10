@@ -1,5 +1,7 @@
 package uk.me.ruthmills.batbox.boiler.service.impl;
 
+import java.util.Date;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
@@ -20,6 +22,8 @@ public class BoilerServiceImpl implements BoilerService {
 	private GpioPinDigitalOutput upLed;
 	private GpioPinDigitalOutput hotWater;
 	private GpioPinDigitalOutput heating;
+	
+	private long lastCommandReceivedTime = 0L;
 	
 	@PostConstruct
 	public void initialise() {
@@ -42,19 +46,41 @@ public class BoilerServiceImpl implements BoilerService {
 
 	@Override
 	public void off() {
+		updateLastCommandReceivedTime();
 		hotWater.high();
 		heating.high();
 	}
 	
 	@Override
 	public void hotWaterOnly() {
+		updateLastCommandReceivedTime();
 		hotWater.low();
 		heating.high();
 	}
 	
 	@Override
 	public void heatingAndHotWater() {
+		updateLastCommandReceivedTime();
 		hotWater.low();
 		heating.low();
+	}
+
+	@Override
+	public void checkInactivity() {
+		if (new Date().getTime() - lastCommandReceivedTime > 315000L) {
+			upLed.high();
+			hotWater.high();
+			heating.high();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException ex) {
+			} finally {
+				upLed.low();
+			}
+		}
+	}
+	
+	private void updateLastCommandReceivedTime() {
+		lastCommandReceivedTime = new Date().getTime();		
 	}
 }

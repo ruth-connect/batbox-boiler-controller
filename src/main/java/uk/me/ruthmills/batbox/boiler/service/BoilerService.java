@@ -7,4 +7,6 @@ public interface BoilerService {
 	public void hotWaterOnly();
 	
 	public void heatingAndHotWater();
+	
+	public void checkInactivity();
 }
