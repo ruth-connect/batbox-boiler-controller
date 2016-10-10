@@ -29,7 +29,7 @@ public class BoilerServiceImpl implements BoilerService {
 	public void initialise() {
 		gpio = GpioFactory.getInstance();
 		
-		upLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "Up LED", PinState.LOW);
+		upLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "Up LED", PinState.HIGH);
 		upLed.setShutdownOptions(true, PinState.HIGH);
 		
 		hotWater = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_09, "Hot Water", PinState.HIGH);
@@ -74,10 +74,9 @@ public class BoilerServiceImpl implements BoilerService {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException ex) {
-			} finally {
-				upLed.low();
 			}
 		}
+		upLed.low();
 	}
 	
 	private void updateLastCommandReceivedTime() {
